@@ -1,3 +1,4 @@
+from pathlib import Path
 import textract
 import tempfile
 import mimetypes
@@ -124,6 +125,8 @@ def get_conversational_chain():
     - Cite credible sources or references to support your answers, including links if available. This will enhance the reliability of your responses.
     - If a mistake is made in a previous response, recognize and correct it promptly. This shows accountability and ensures accuracy in your answers.
 
+    \n\n
+    
     # Context
     Context:\n {context}?\n
 
@@ -183,14 +186,24 @@ def main():
                 
                 raw_text = ""
                 for doc in docs:
-                    raw_text += extract_text_from_bytes(doc.getvalue(), get_file_extension(doc))
-                    
-                text_chunks = get_text_chunks(raw_text)
-                get_vector_store(text_chunks)
-                st.success("Done")
+                    extracted_text = extract_text_from_bytes(doc.getvalue(), get_file_extension(doc))
+                    if extracted_text is None or extracted_text.strip() == "":
+                        file_name = ""
+                        if hasattr(doc, 'name'):
+                            file_name = Path(doc.name).name
+                        st.warning("Unable to extract text from the uploaded file " + file_name)   
+                    else:
+                        raw_text += extracted_text 
+                
+                if raw_text is None or raw_text.strip() == "":
+                    st.error("Text extraction failed for all uploaded files")
+                else:
+                    text_chunks = get_text_chunks(raw_text)
+                    get_vector_store(text_chunks)
+                    st.success("Done")
 
     # Main content area for displaying chat messages
-    st.title("Beyond Words: Chat with Your Files using Gemini 🪄")
+    st.title("Beyond Words: Chat with Your Files using Gemini 🪄\nPRIVATE🔒")
     st.write("""
         | Category                | File Types                                           |
         |-------------------------|------------------------------------------------------|
