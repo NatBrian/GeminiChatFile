@@ -150,7 +150,6 @@ def clear_chat_history():
     st.session_state.messages = [
         {"role": "assistant", "content": "Forget searching through endless folders! Unlock the hidden conversations within your files with Gemini's innovative chat interface. Ask questions, explore insights, and discover connections – all directly through natural language. Upload your files and interact with your data."}]
 
-
 def user_input(user_question):
     embeddings = GoogleGenerativeAIEmbeddings(
         model="models/embedding-001")  # type: ignore
@@ -203,7 +202,7 @@ def main():
                     st.success("Done")
 
     # Main content area for displaying chat messages
-    st.title("Beyond Words: Chat with Your Files using Gemini 🪄\nPRIVATE🔒")
+    st.title("Beyond Words: Chat with Your Files using Gemini 🪄")
     st.write("""
         | Category                | File Types                                           |
         |-------------------------|------------------------------------------------------|
